@@ -1,19 +1,24 @@
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import MetaData
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
 from sqlalchemy.orm import sessionmaker
 
+SQLALCHEMY_DATABASE_URL = "postgresql+asyncpg://postgres:1234@localhost:5432/lotto_win"
 
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:1234@localhost:5432/lotto_win"
+engine = create_async_engine(SQLALCHEMY_DATABASE_URL, echo=True)
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+AsyncSessionLocal = sessionmaker(autocommit=False, autoflush=False, class_= AsyncSession, bind=engine)
 
-Base = declarative_base()
+Base: DeclarativeMeta = declarative_base()
 
-def get_db():
-    db = SessionLocal()
+async def get_db():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+        await conn.run_sync(Base.metadata.create_all)
+    
+    db = AsyncSessionLocal()
+    
     try:
         yield db
     finally:
-        db.close()
+        await db.close()
