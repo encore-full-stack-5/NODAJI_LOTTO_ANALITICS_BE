@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 from databases.database import get_db
@@ -9,6 +9,12 @@ router = APIRouter()
 
 global_url = '/api/v1/lotto'
 
+@router.post(f'{global_url}', status_code=201)
+async def create_lotto(lotto: lotto_schemas.LottoCreate, db: AsyncSession = Depends(get_db)):
+    if lotto is None:
+        raise HTTPException(status_code=404, detail="Not Found Data")
+    await lotto_service.create_lotto(db=db, lotto=lotto)
+    
 @router.get(f'{global_url}/result1', response_model=list[lotto_schemas.LottoResponse])
 async def get_all(db: AsyncSession = Depends(get_db)):
     return await lotto_service.get_all_lotto_info(db)
@@ -17,9 +23,6 @@ async def get_all(db: AsyncSession = Depends(get_db)):
 async def get_lotto_result(db: AsyncSession = Depends(get_db)):
     return await lotto_service.get_lotto_info(db=db)
 
-@router.post(f'{global_url}', status_code=201)
-async def create_lotto(lotto: lotto_schemas.LottoCreate, db: AsyncSession = Depends(get_db)):
-    await lotto_service.create_lotto(db=db, lotto=lotto)
 
 @router.get(f'{global_url}/analytics/vertical')
 async def get_vertical_chart(db: AsyncSession = Depends(get_db)):
