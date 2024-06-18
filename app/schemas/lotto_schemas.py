@@ -1,4 +1,6 @@
 from pydantic import BaseModel
+from entities import models
+from typing import List
 import datetime
 
 class LottoBase(BaseModel):
@@ -8,12 +10,15 @@ class LottoBase(BaseModel):
     fourth_number: int
     fifth_number: int
     sixth_number: int
-    bonus_number: int
+    
     
 class LottoCreate(LottoBase):
-    pass
+    bonus_number: int
+    
+    class Config:
+        from_attributes = True
 
-class Lotto(LottoBase):
+class LottoResponse(LottoBase):
     id: int
     create_at: datetime.datetime
     
