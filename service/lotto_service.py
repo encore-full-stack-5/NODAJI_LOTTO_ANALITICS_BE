@@ -23,6 +23,7 @@ async def get_lotto_info(db: AsyncSession):
         .order_by(desc(models.LottoDrawData.id))  # 원하는 컬럼으로 대체 가능
         .limit(1)
     )
+        
     return result.scalar_one_or_none()
     
 async def get_vertical_chart(db: AsyncSession):

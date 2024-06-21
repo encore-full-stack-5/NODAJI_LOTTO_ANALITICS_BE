@@ -1,7 +1,13 @@
 from fastapi import FastAPI
 from routers.lotto import router
+from databases.database import init_db
 
-app = FastAPI()
+async def startup(app):
+    await init_db()
+    yield
+    
+app = FastAPI(lifespan=startup)
+
 
 @app.get('/')
 def get_default():

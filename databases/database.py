@@ -13,13 +13,19 @@ AsyncSessionLocal = sessionmaker(autocommit=False, autoflush=False, class_= Asyn
 Base: DeclarativeMeta = declarative_base()
 
 async def get_db():
+    async with AsyncSessionLocal() as session:
+        try:
+            yield session
+        except Exception:
+            await session.rollback()
+            raise
+        finally:
+            await session.close()
+
+
+async def init_db():
     async with engine.begin() as conn:
-        # await conn.run_sync(Base.metadata.drop_all)
+        await conn.run_sync(Base.metadata.drop_all)
+        print("테이블 삭제")
         await conn.run_sync(Base.metadata.create_all)
-    
-    db = AsyncSessionLocal()
-    
-    try:
-        yield db
-    finally:
-        await db.close()
+        print("테이블 생성")
