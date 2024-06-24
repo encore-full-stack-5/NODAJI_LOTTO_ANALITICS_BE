@@ -2,24 +2,24 @@ from pydantic import BaseModel
 from datetime import datetime
 
 class LottoBase(BaseModel):
-    first_number: int
-    second_number: int
-    third_number: int
-    fourth_number: int
-    fifth_number: int
-    sixth_number: int
+    first: int
+    second: int
+    third: int
+    fourth: int
+    fifth: int
+    sixth: int
     
     
 class LottoCreate(LottoBase):
-    bonus_number: int
-    create_at: datetime
+    bonus: int
+    createAt: datetime
     
     class Config:
         from_attributes = True
 
 class LottoResponse(LottoBase):
     id: int
-    create_at: datetime
+    createAt: datetime
     
     class Config:
         from_attributes = True
