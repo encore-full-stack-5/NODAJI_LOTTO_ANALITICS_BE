@@ -85,7 +85,7 @@ async def get_odd_even_chart(db: AsyncSession):
             fourth= row.fourth,
             fifth= row.fifth,
             sixth= row.sixth,
-            createAt= row.createAt
+            # createAt= row.createAt
         )
         for row in rows
     ]
