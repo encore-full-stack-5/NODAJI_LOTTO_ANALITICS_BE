@@ -15,14 +15,16 @@ async def create_lotto(lotto: lotto_schemas.LottoCreate, db: AsyncSession = Depe
         raise HTTPException(status_code=404, detail="Not Found Data")
     await lotto_service.create_lotto(db=db, lotto=lotto)
     
-@router.get(f'{global_url}/result1', response_model=list[lotto_schemas.LottoResponse])
+@router.get(f'{global_url}', response_model=list[lotto_schemas.LottoResponse])
 async def get_all(db: AsyncSession = Depends(get_db)):
     return await lotto_service.get_all_lotto_info(db)
 
 @router.get(f'{global_url}/analytics', response_model=lotto_schemas.LottoResponse)
 async def get_lotto_result(db: AsyncSession = Depends(get_db)):
-    return await lotto_service.get_lotto_info(db=db)
-
+    result = await lotto_service.get_lotto_info(db=db)
+    if result is None:
+        raise HTTPException(status_code=404, detail="Not Found Data")
+    return result
 
 @router.get(f'{global_url}/analytics/vertical')
 async def get_vertical_chart(db: AsyncSession = Depends(get_db)):
