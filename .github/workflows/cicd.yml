@@ -55,4 +55,4 @@ jobs:
         username: ${{secrets.SSH_USERNAME}}
         key: ${{secrets.SSH_KEY}}
         script: |
-          sudo kubectl rollout restart deploy payment
+          sudo kubectl rollout restart deploy analytics
