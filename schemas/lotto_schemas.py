@@ -8,9 +8,9 @@ class LottoBase(BaseModel):
     fourth: int
     fifth: int
     sixth: int
-    bonus: int
     
 class LottoCreate(LottoBase):
+    bonus: int
     createAt: datetime
     
     class Config:
