@@ -29,25 +29,25 @@ async def get_lotto_info(db: AsyncSession):
 async def get_vertical_chart(db: AsyncSession):
     index = await db.execute(select(models.LottoDrawData.id))
     data = await db.execute(select(
-        models.LottoDrawData.first_number,
-        models.LottoDrawData.second_number,
-        models.LottoDrawData.third_number,
-        models.LottoDrawData.fourth_number,
-        models.LottoDrawData.fifth_number,
-        models.LottoDrawData.sixth_number,
+        models.LottoDrawData.first,
+        models.LottoDrawData.second,
+        models.LottoDrawData.third,
+        models.LottoDrawData.fourth,
+        models.LottoDrawData.fifth,
+        models.LottoDrawData.sixth,
     ))
     result = await lotto_dataframe.get_vertical_chart(index, data)
-    return {'vetical': result}
+    return {'vertical': result}
     
 async def get_horizontal_chart(db: AsyncSession):
     index = await db.execute(select(models.LottoDrawData.id))
     data = await db.execute(select(
-        models.LottoDrawData.first_number,
-        models.LottoDrawData.second_number,
-        models.LottoDrawData.third_number,
-        models.LottoDrawData.fourth_number,
-        models.LottoDrawData.fifth_number,
-        models.LottoDrawData.sixth_number,
+        models.LottoDrawData.first,
+        models.LottoDrawData.second,
+        models.LottoDrawData.third,
+        models.LottoDrawData.fourth,
+        models.LottoDrawData.fifth,
+        models.LottoDrawData.sixth,
     ))
     
     result = await lotto_dataframe.get_lotto_result_by_group(index, data)
@@ -56,12 +56,12 @@ async def get_horizontal_chart(db: AsyncSession):
 async def get_pie_chart(db: AsyncSession):
     index = await db.execute(select(models.LottoDrawData.id))
     data = await db.execute(select(
-        models.LottoDrawData.first_number,
-        models.LottoDrawData.second_number,
-        models.LottoDrawData.third_number,
-        models.LottoDrawData.fourth_number,
-        models.LottoDrawData.fifth_number,
-        models.LottoDrawData.sixth_number,
+        models.LottoDrawData.first,
+        models.LottoDrawData.second,
+        models.LottoDrawData.third,
+        models.LottoDrawData.fourth,
+        models.LottoDrawData.fifth,
+        models.LottoDrawData.sixth,
     ))
     
     result = await lotto_dataframe.get_lotto_result_by_group(index, data)
@@ -73,18 +73,19 @@ async def get_odd_even_chart(db: AsyncSession):
         .order_by(desc(models.LottoDrawData.id))
         .limit(50)
     )
+    print(result)
     
     rows = result.scalars().all()
     result_data = [
         lotto_schemas.LottoResponse(
             id= row.id,
-            first_number= row.first_number,
-            second_number= row.second_number,
-            third_number= row.third_number,
-            fourth_number= row.fourth_number,
-            fifth_number= row.fifth_number,
-            sixth_number= row.sixth_number,
-            create_at= row.create_at
+            first= row.first,
+            second= row.second,
+            third= row.third,
+            fourth= row.fourth,
+            fifth= row.fifth,
+            sixth= row.sixth,
+            createAt= row.createAt
         )
         for row in rows
     ]
