@@ -18,6 +18,7 @@ class LottoCreate(LottoBase):
 
 class LottoResponse(LottoBase):
     id: int
+    bonus: int
     createAt: datetime
     
     class Config:
